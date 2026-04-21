@@ -1,3 +1,5 @@
+import json
+
 tasks = []
 action = 0
 
@@ -32,7 +34,8 @@ def get_valid_task(prompt):
 
 def main ():
     while True:
-        print ("1. Add task \n2. View tasks \n3. Mark task as done \n4. Quit")
+        load_task()
+        print ("\n1. Add task \n2. View tasks \n3. Mark task as done \n4. Quit")
         action = get_valid_action("Please enter the number of the corresponding action that you would like to perform")
 
         if action == 1:
@@ -49,13 +52,29 @@ def add_task () :
     name = input("Please enter the task name")
     done = False
     tasks.append({"name" : name, "done" : done})
+    save_task()
 
 def view_task():
     for i, task in enumerate(tasks):
-        print(f"{i +1}. {task["name"]} : {task["done"]} ")
+        print(f"{i +1}- {task["name"]} : {task["done"]} ")
     
 def mark_task_as_done():
     i = get_valid_task("Please enter the task number of the task you completed") -1
     tasks[i]["done"] = True
+    save_task()
 
+def save_task():
+    with open("My to-do list.json", "w") as file:
+        json.dump(tasks, file)
+
+def load_task():
+    global tasks
+    try:
+        with open("My to-do list.json", "r") as file:
+            tasks =  json.load(file)
+        
+    except FileNotFoundError:
+        pass
+
+main()
 
